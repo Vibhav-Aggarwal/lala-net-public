@@ -1,0 +1,27 @@
+%% Figure 4. Headscale authentication + DERP-fallback flow
+sequenceDiagram
+    autonumber
+    participant N as Node<br/>(Tailscale client)
+    participant H as Headscale<br/>(network-server)
+    participant P as Peer<br/>(another node)
+    participant D as DERP Relay<br/>(Tailscale public)
+
+    Note over N,H: Initial registration (one-time)
+    N->>H: POST /machine/register<br/>(with preauth key)
+    H-->>N: 200 OK + signed machine key<br/>+ DERP map + peer list
+
+    Note over N,H: Ongoing state sync
+    N->>H: long-poll /machine/{id}/map
+    H-->>N: updated peer list,<br/>ACL rules, DERP regions
+
+    Note over N,P: Attempt direct WireGuard path
+    N->>P: STUN-based UDP hole punch
+    alt NAT allows direct
+        P-->>N: direct WireGuard tunnel<br/>(encrypted, low latency)
+    else Symmetric NAT blocks direct
+        N->>D: encrypted traffic via DERP<br/>(fallback relay)
+        D->>P: relayed encrypted traffic
+        Note over N,P: DERP limitation: cannot<br/>carry raw TCP initiated<br/>from coordinator side
+    end
+
+    Note over N,H: Works offline if Headscale is down<br/>(peers cached, no control-plane dependency for data plane)

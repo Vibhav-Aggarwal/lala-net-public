@@ -1,0 +1,52 @@
+// Headscale ACL policy — sanitized reference
+// HuJSON format (HuJSON is JSON with comments and trailing commas allowed)
+{
+  "groups": {
+    "group:admin": ["USER_ID_REDACTED"],
+  },
+
+  "tagOwners": {
+    "tag:cloud":    ["group:admin"],
+    "tag:office":   ["group:admin"],
+    "tag:home":     ["group:admin"],
+    "tag:nomadic":  ["group:admin"],
+  },
+
+  "acls": [
+    // Admin group can reach every node on every port
+    {
+      "action": "accept",
+      "src":    ["group:admin"],
+      "dst":    ["*:*"],
+    },
+
+    // Nodes within the same tag group may talk freely
+    {
+      "action": "accept",
+      "src":    ["tag:office"],
+      "dst":    ["tag:office:*"],
+    },
+    {
+      "action": "accept",
+      "src":    ["tag:nomadic"],
+      "dst":    ["tag:nomadic:*"],
+    },
+
+    // Control plane (tag:cloud) may reach all nodes on SSH port (for ops)
+    {
+      "action": "accept",
+      "src":    ["tag:cloud"],
+      "dst":    ["*:22", "*:2222"],
+    },
+  ],
+
+  "ssh": [
+    // Enable Tailscale SSH only for admin group, inbound to tag:cloud nodes
+    {
+      "action": "accept",
+      "src":    ["group:admin"],
+      "dst":    ["tag:cloud"],
+      "users":  ["autogroup:nonroot"],
+    },
+  ],
+}

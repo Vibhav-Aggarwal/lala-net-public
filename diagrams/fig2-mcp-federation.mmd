@@ -1,0 +1,39 @@
+%% Figure 2. MCP server federation across cluster nodes
+flowchart LR
+    LLM["Agentic LLM Client<br/>(Claude Code / OpenClaw)"]
+
+    subgraph Federation["MCP Federation Layer<br/>(7 endpoints over Cloudflare Tunnel HTTPS)"]
+        M1["mcp-home<br/>vibhavaggarwal.com/mcp"]
+        M2["mcp-office<br/>vibhavaggarwal.com/mcp"]
+        M3["mcp-lab<br/>vibhavaggarwal.com/mcp"]
+        M4["mcp-admin<br/>vibhavaggarwal.com/mcp"]
+        M5["mcp-gpu<br/>vibhavaggarwal.com/mcp"]
+        M6["mcp-cloud<br/>vibhavaggarwal.com/mcp"]
+        M7["mcp-mobile<br/>vibhavaggarwal.com/mcp"]
+    end
+
+    subgraph Nodes["Cluster Nodes<br/>(systemd mcp-proxy v6.4.0)"]
+        N1["home-server<br/>FS: /home, /var/www, /opt"]
+        N2["office-server<br/>FS: /home, /var/www, /opt"]
+        N3["lab-server<br/>FS: /home, /tmp, /var/log"]
+        N4["admin-server<br/>FS: /home, /tmp, /opt"]
+        N5["gpu-server<br/>FS: /home, /mnt/models"]
+        N6["cloud-server<br/>FS: /home, /tmp, /opt"]
+        N7["mobile-server<br/>FS: /home, /tmp, /var/log"]
+    end
+
+    LLM -->|"JSON-RPC 2.0<br/>Streamable HTTP"| M1
+    LLM --> M2
+    LLM --> M3
+    LLM --> M4
+    LLM --> M5
+    LLM --> M6
+    LLM --> M7
+
+    M1 -->|"stdio"| N1
+    M2 --> N2
+    M3 --> N3
+    M4 --> N4
+    M5 --> N5
+    M6 --> N6
+    M7 --> N7

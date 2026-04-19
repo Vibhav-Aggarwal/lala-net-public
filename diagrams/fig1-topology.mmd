@@ -1,0 +1,61 @@
+%% Figure 1. Lala City cluster topology (10 nodes across 4 logical segments)
+%% Matches https://lala.city/servers public dashboard as of 2026-04
+flowchart TB
+    subgraph Internet["Public Internet"]
+        CF[Cloudflare<br/>Tunnels + DNS + Access]
+    end
+
+    subgraph Cloud["CLOUD NETWORK<br/>(Oracle Always-Free Tier, Mumbai)"]
+        NS["network-server<br/>100.64.0.1<br/>Control plane<br/>Headscale + Caddy"]
+        CS["cloud-server<br/>100.64.0.8<br/>Compute node"]
+    end
+
+    subgraph Office["OFFICE NETWORK (LAN)"]
+        OFF["office-server<br/>100.64.0.2<br/>Orchestrator<br/>ARM64 Kali, n8n"]
+        LAB["lab-server<br/>100.64.0.5<br/>Research lab<br/>IBM x3650 + Neo4j"]
+        GPU["gpu-server<br/>100.64.0.4<br/>Media hub<br/>4x RX 570 OpenCL"]
+        NAS["nas-server<br/>Data lake<br/>Bulk storage"]
+    end
+
+    subgraph Home["HOME NETWORK"]
+        HOME["home-server<br/>100.64.0.6<br/>Personal space<br/>Nextcloud, Jellyfin"]
+    end
+
+    subgraph Nomadic["NOMADIC NETWORK<br/>(travels with operator)"]
+        MOB["mobile-server<br/>100.64.0.7<br/>Always-on ARM64<br/>OnePlus 6 + pmOS"]
+        ADM["admin-server<br/>100.64.0.3<br/>Training / CUDA<br/>Alienware 17 R2"]
+        BR["black-router<br/>WiFi gateway<br/>Netgear R6120<br/>OpenWrt"]
+    end
+
+    CF -->|"cloudflared tunnels"| NS
+    CF -->|"cloudflared tunnels"| HOME
+    CF -->|"cloudflared tunnels"| OFF
+    CF -.->|"on-demand"| MOB
+    CF -.->|"on-demand"| ADM
+
+    NS ===|"Headscale<br/>mesh coordination"| HOME
+    NS ===|"Headscale"| OFF
+    NS ===|"Headscale"| LAB
+    NS ===|"Headscale"| GPU
+    NS ===|"Headscale"| MOB
+    NS ===|"Headscale"| ADM
+    NS ===|"Headscale"| BR
+    NS ===|"Headscale"| CS
+
+    OFF ---|"LAN"| LAB
+    OFF ---|"LAN"| GPU
+    OFF ---|"LAN"| NAS
+    BR ---|"WiFi"| ADM
+    BR ---|"WiFi"| MOB
+
+    classDef cloud fill:#e3f2fd,stroke:#1976d2,color:#000
+    classDef home fill:#e8f5e9,stroke:#388e3c,color:#000
+    classDef office fill:#fff3e0,stroke:#f57c00,color:#000
+    classDef nomadic fill:#f3e5f5,stroke:#7b1fa2,color:#000
+    classDef internet fill:#f5f5f5,stroke:#616161,color:#000
+
+    class NS,CS cloud
+    class HOME home
+    class OFF,LAB,GPU,NAS office
+    class MOB,ADM,BR nomadic
+    class CF internet

@@ -1,0 +1,28 @@
+[Unit]
+Description=MCP Filesystem Server (via mcp-proxy)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=mcp
+Group=mcp
+EnvironmentFile=/etc/mcp-proxy/env
+ExecStart=/usr/local/bin/mcp-proxy \
+  --host 127.0.0.1 \
+  --port 3000 \
+  --transport streamable_http \
+  -- \
+  npx -y @modelcontextprotocol/server-filesystem ${ALLOWED_DIRS}
+Restart=always
+RestartSec=5s
+
+# Hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=${ALLOWED_DIRS}
+
+[Install]
+WantedBy=multi-user.target

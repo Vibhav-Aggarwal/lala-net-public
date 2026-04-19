@@ -1,0 +1,23 @@
+# cloudflared per-node tunnel config
+# Install: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+# Create tunnel:   cloudflared tunnel create <name>
+# Route DNS:       cloudflared tunnel route dns <name> hostname.example.com
+
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: /etc/cloudflared/REPLACE_WITH_TUNNEL_ID.json
+
+ingress:
+  # SSH into this node via Cloudflare Access
+  - hostname: this-node.example.com
+    service: ssh://localhost:22
+
+  # MCP filesystem server over Streamable HTTP
+  - hostname: mcp-this-node.example.com
+    service: http://localhost:3000
+
+  # Optional: application-specific services
+  # - hostname: grafana.example.com
+  #   service: http://localhost:3100
+
+  # Mandatory catch-all — any hostname not matched returns 404
+  - service: http_status:404
