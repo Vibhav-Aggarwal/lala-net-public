@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+message: "If you use this infrastructure reference or cite the paper, please use the metadata below."
+type: software
+title: "Zero-Cost Sovereign Computing: A 10-Node Heterogeneous Cluster Using Headscale, Cloudflare Tunnels, and Oracle Always-Free Tier"
+authors:
+  - family-names: Aggarwal
+    given-names: Vibhav
+    orcid: "https://orcid.org/0009-0000-7686-7119"
+    affiliation: "Independent Researcher, Gurugram, India"
+version: "1.0.0"
+date-released: "2026-04-19"
+license: CC-BY-4.0
+repository-code: "https://github.com/Vibhav-Aggarwal/lala-net-public"
+url: "https://doi.org/10.5281/zenodo.19654425"
+doi: "10.5281/zenodo.19654425"
+abstract: >
+  A 10-node heterogeneous sovereign compute cluster built at near-zero operational
+  cost using Headscale (self-hosted Tailscale control plane), Cloudflare Tunnels,
+  and Oracle Cloud Always-Free tier. This repository contains the reference
+  configuration, topology diagrams, and scripts accompanying the paper.
+keywords:
+  - sovereign computing
+  - home lab
+  - headscale
+  - cloudflare tunnels
+  - oracle cloud
+  - distributed computing
+  - self-hosted
+  - heterogeneous cluster
+  - MCP federation
+  - zero cost infrastructure
+preferred-citation:
+  type: misc
+  title: "Zero-Cost Sovereign Computing: A 10-Node Heterogeneous Cluster Using Headscale, Cloudflare Tunnels, and Oracle Always-Free Tier"
+  authors:
+    - family-names: Aggarwal
+      given-names: Vibhav
+      orcid: "https://orcid.org/0009-0000-7686-7119"
+  year: 2026
+  month: 4
+  publisher: Zenodo
+  doi: "10.5281/zenodo.19654425"
+  url: "https://doi.org/10.5281/zenodo.19654425"
